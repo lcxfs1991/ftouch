@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        html {
+            font-size: 25px;
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+        #data {
+            position: absolute;
+        }
+        #wrapper {
+            background: url(resting.JPG) no-repeat center center;
+            -webkit-background-size: cover;
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<div id="data">
+    <div id="touchstartFingers"></div>
+    <div id="touchchangedFingers"></div>
+    <div id="initialResizeDistance"></div>
+    <div id="resizeDistance"></div>
+    <div id="distance"></div>
+</div>
+<div id="wrapper">
+
+</div>
+<script src="ftouch.js"></script>
+<script>
+    ftouch.opt.name = 456;
+    ftouch.opt.isVertical = true;
+    ftouch.opt.wrapper = document.getElementById('wrapper');
+    ftouch.touchStartCallback = function(fingersNumber) {
+        document.getElementById('touchstartFingers').innerHTML = 'fingersNumber: ' + fingersNumber;
+    }
+    ftouch.init();
+</script>
+</body>
+</html>
