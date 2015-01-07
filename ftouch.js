@@ -16,7 +16,11 @@ var ftouch = (function($win) {
         var _initialResizeDistance = 0;
         var _wrapperWidth = opt.wrapper.clientWidth;
         var _wrapperHeight = opt.wrapper.clientHeight;
+        var _setScale = 1;
 
+        /**
+         * initialization
+         */
         var init = function () {
             bindTouchHandler();
         };
@@ -33,6 +37,9 @@ var ftouch = (function($win) {
             }
         };
 
+        /**
+         * reset value
+         */
         var reset = function () {
             _startTime = 0;
             _endTime = 0;
@@ -40,7 +47,7 @@ var ftouch = (function($win) {
         };
 
         /**
-         *
+         * bind touch event
          */
         var bindTouchHandler = function () {
             var wrapper = opt.wrapper;
@@ -50,6 +57,7 @@ var ftouch = (function($win) {
             var fingerNum = 0;
             var changedFingerNum = 0;
             var centerPos = null;
+            var resetInterval = null;
 
             wrapper.addEventListener('touchstart', function (ev) {
                 ev.preventDefault();
@@ -72,17 +80,22 @@ var ftouch = (function($win) {
                     getSwipeDistance(startPos[0], movePos[0]);
                 }
                 else if (fingerNum === 2) {
-                    centerPos = changedPos[0];
+                    centerPos = startPos[0];
 
                     if (_initialResizeDistance == 0) {
                         _initialResizeDistance = getResizeDistance(changedPos[0], changedPos[1]);
                         document.getElementById('initialResizeDistance').innerHTML = 'initialResizeDistance: ' + _initialResizeDistance;
+                        resetInterval = setInterval(function() {
+                            _initialResizeDistance = getResizeDistance(changedPos[0], changedPos[1]);
+                        }, 100);
                     }
                     else {
                         resizeDistance = getResizeDistance(changedPos[0], changedPos[1]);
                         document.getElementById('resizeDistance').innerHTML = 'resizeDistance: ' + resizeDistance;
-                        var percentage = getResizePercentage(_initialResizeDistance, resizeDistance);
-                        setScale(centerPos, percentage);
+                        getResizePercentage(_initialResizeDistance, resizeDistance);
+                        setScale(centerPos, _setScale);
+                        document.getElementById('scalePercent').innerHTML = 'scalePercent: ' + _setScale;
+                        document.getElementById('percent').innerHTML = 'percent: ' + percentage;
                     }
                 }
             });
@@ -91,6 +104,8 @@ var ftouch = (function($win) {
                 ev.preventDefault();
                 _endTime = new Date().getTime();
                 reset();
+                clearInterval(resetInterval);
+                resetSize();
                 console.log('touchend');
             });
         };
@@ -108,13 +123,35 @@ var ftouch = (function($win) {
 
         var getResizePercentage = function(initResizeDist, changedResizeDist) {
             var percentage = changedResizeDist / initResizeDist;
-            return percentage;
+            if (percentage < 1) {
+                percentage *= -1;
+                percentage *= 0.1;
+            }
+            else {
+                percentage -= 1;
+                percentage *= 0.3;
+            }
+
+
+            _setScale += percentage;
+
+            if (_setScale >= 5) {
+                _setScale = 5;
+            }
+            else if (_setScale <= 0.8){
+                _setScale = 0.8;
+            }
         };
 
+        var resetSize = function() {
+            if (_setScale < 1) {
+                wrapper.style.webkitTransform = 'scale(1, 1)';
+            }
+        }
+
         var setScale = function(centerPos, percentage) {
-            //alert(centerPos.pageX);
-            //alert(centerPos.pageY);
-            wrapper.style.webkitTransformOrigin = centerPos.pageX + ' ' + centerPos.pageY;
+            wrapper.style.webkitTransformOrigin = (centerPos.pageX / _wrapperWidth * 100) + '% ' + (centerPos.pageY / _wrapperHeight * 100) + '%';
+            document.getElementById('centerPos').innerHTML =  wrapper.style.webkitTransformOrigin;
             wrapper.style.webkitTransform = 'scale(' + percentage + ', ' + percentage + ')';
         };
 
