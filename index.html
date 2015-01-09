@@ -2,55 +2,75 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no"/>
     <title></title>
     <style>
-        html {
-            font-size: 30px;
-            width: 100%;
+        html, body{
             height: 100%;
-        }
-
-        body {
+            width: 100%;
             margin: 0;
             padding: 0;
-            width: 100%;
-            height: 100%;
+            overflow: hidden;
         }
-        #data {
-            position: absolute;
-            z-index: 100;
-        }
-        #wrapper {
-            background: url(resting.JPG) no-repeat center center;
-            -webkit-background-size: cover;
+
+        #dom {
             height: 100%;
-            width: 100%;
+            width: auto;
+        }
+
+        .article {
+            height: 100%;
+            width: auto;
+        }
+
+        .article:nth-child(1) {
+            background-color: #f1c40f;
+        }
+
+        .article:nth-child(2) {
+            background-color: #2ecc71;
+        }
+
+        .article:nth-child(3) {
+            background-color: #3498db;
         }
     </style>
 </head>
 <body>
-<div id="data">
-    <div id="touchstartFingers"></div>
-    <div id="touchchangedFingers"></div>
-    <div id="initialResizeDistance"></div>
-    <div id="resizeDistance"></div>
-    <div id="distance"></div>
-    <div id="scalePercent"></div>
-    <div id="percent"></div>
-    <div id="centerPos"></div>
-</div>
-<div id="wrapper">
+    <div id="dom">
+        <section class="article"></section>
+        <section class="article"></section>
+        <section class="article"></section>
+    </div>
+    <script src="ftouch.js"></script>
+    <script>
+//        var dom = document.getElementById('dom');
+//        var currentY = 0;
+//        dom.style.webkitTransform = 'translate3d(0, 0, 0)';
+//        dom.style.webkitTransition = '0s';
+//        var startPos = null;
+//        var movePos = null;
+//
+//        dom.addEventListener('touchstart', function(ev) {
+//            startPos = ev.touches[0];
+//            console.log(startPos);
+//        }, false);
+//
+//        dom.addEventListener('touchmove', function(ev) {
+//            movePos = ev.touches[0];
+//            var distance = movePos.pageY - startPos.pageY;
+//            currentY += distance;
+//            dom.style.webkitTransform = 'translate3d(0, ' + currentY + 'px, 0)';
+//            startPos = movePos;
+//            console.log(distance);
+//        }, false);
+//
+//        dom.addEventListener('touchend', function(ev) {
+//
+//        }, false);
 
-</div>
-<script src="ftouch.js"></script>
-<script>
-    ftouch.opt.name = 456;
-    ftouch.opt.isVertical = true;
-    ftouch.opt.wrapper = document.getElementById('wrapper');
-    ftouch.touchStartCallback = function(fingersNumber) {
-        document.getElementById('touchstartFingers').innerHTML = 'fingersNumber: ' + fingersNumber;
-    }
-    ftouch.init();
-</script>
+        ftouch.init();
+
+    </script>
 </body>
 </html>
