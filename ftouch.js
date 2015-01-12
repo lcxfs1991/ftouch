@@ -80,6 +80,23 @@ var ftouch = (function($win, $) {
             var distance = movePosDelta - startPosDelta;
             checkDirection(distance);
             currentDelta += distance;
+            var baseHeight = 0;
+            if (config.direction === -1) {
+                baseHeight = config.currentNode * config.domHeight + (-1) * config.direction * config.domHeight / 3
+            }
+            else if (config.direction === 1) {
+                baseHeight = -1 * (config.currentNode * config.domHeight + config.domHeight / 3);
+            }
+
+
+            if (config.currentNode === 0 && currentDelta >= baseHeight && config.direction === -1) {
+                currentDelta = baseHeight;
+            }
+            else if (config.currentNode === children.length - 1 && currentDelta <=   baseHeight  && config.direction === 1) {
+                currentDelta =  baseHeight;
+            }
+            //console.log(currentDelta + '-' + baseHeight);
+
             touchEndDistance = currentDelta;
             dom.style.webkitTransform = (opt.isVertical) ? 'translate3d(0, ' + currentDelta + 'px, 0)' : 'translate3d(' + currentDelta + 'px, 0, 0)';
             startPos = movePos;
@@ -87,14 +104,7 @@ var ftouch = (function($win, $) {
 
         $.on(dom, 'touchend', function(ev) {
             var touchEndDistanceABS = Math.abs(touchEndDistance);
-            var baseHeight = 0;
-
-            if (config.direction === -1) {
-                baseHeight = config.currentNode * config.domHeight - config.domHeight / 3;
-            }
-            else if (config.direction === 1) {
-                baseHeight = config.domHeight / 3 + config.currentNode * config.domHeight;
-            }
+            var baseHeight = config.currentNode * config.domHeight + config.direction * config.domHeight / 3;
 
             //console.log(touchEndDistanceABS + '-' + baseHeight);
 
@@ -127,10 +137,6 @@ var ftouch = (function($win, $) {
             return false;
         }
         return true;
-    };
-
-    var bouncingEffect = function() {
-
     };
 
     var resetSwipe = function() {
