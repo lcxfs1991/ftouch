@@ -68,6 +68,8 @@ var ftouch = (function($win, $) {
 
         var startPos = null;
         var movePos = null;
+        var swipeThreshold =  config.domHeight / 9;
+        var bouncingThreshold = config.domHeight / 5;
 
         $.on(dom, 'touchstart', function(ev) {
             startPos = ev.touches[0];
@@ -82,10 +84,10 @@ var ftouch = (function($win, $) {
             currentDelta += distance;
             var baseHeight = 0;
             if (config.direction === -1) {
-                baseHeight = config.currentNode * config.domHeight + (-1) * config.direction * config.domHeight / 3
+                baseHeight = config.currentNode * config.domHeight + (-1) * config.direction * bouncingThreshold;
             }
             else if (config.direction === 1) {
-                baseHeight = -1 * (config.currentNode * config.domHeight + config.domHeight / 3);
+                baseHeight = -1 * (config.currentNode * config.domHeight + bouncingThreshold);
             }
 
 
@@ -104,7 +106,7 @@ var ftouch = (function($win, $) {
 
         $.on(dom, 'touchend', function(ev) {
             var touchEndDistanceABS = Math.abs(touchEndDistance);
-            var baseHeight = config.currentNode * config.domHeight + config.direction * config.domHeight / 3;
+            var baseHeight = config.currentNode * config.domHeight + config.direction * swipeThreshold;
 
             //console.log(touchEndDistanceABS + '-' + baseHeight);
 
