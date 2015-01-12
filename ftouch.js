@@ -15,15 +15,21 @@ var core = (function(){
             }, false);
         };
 
-        core.css = function(object, cssStyle, value) {
+        core.css = function(object, styleList) {
+            console.dir(styleList);
             var cssText = '';
-            if (object) {
-                for (key in vendors) {
-                    cssText += '-' + vendors[key] + '-' + cssStyle + ';' + value + ';';
+            for (cssStyle in styleList) {
+                if (object) {
+                    for (key in vendors) {
+                        cssText += '-' + vendors[key] + '-' + cssStyle + ':' + styleList[cssStyle] + ';';
+                    }
+                    cssText += cssStyle + ':' + styleList[cssStyle] + ':';
                 }
-                cssText += cssStyle + ';' + value + ';';
             }
+
+
             object.style.cssText = cssText;
+            //console.log(cssText);
         };
     }
     catch (e) {
@@ -65,8 +71,9 @@ var ftouch = (function($win, $) {
 
     var swipe = function() {
 
-        $.css(dom, 'transform', 'translate3d(0, 0, 0)');
-        $.css(dom, 'transition', '0s');
+        //$.css(dom, 'transform', 'translate3d(0, 0, 0)');
+        //$.css(dom, 'transition', '0');
+        $.css(dom, {'transform':  'translate3d(0, 0, 0)', 'transition': '0'})
 
         var startPos = null;
         var movePos = null;
@@ -101,7 +108,9 @@ var ftouch = (function($win, $) {
             }
 
             touchEndDistance = currentDelta;
-            dom.style.webkitTransform = (opt.isVertical) ? 'translate3d(0, ' + currentDelta + 'px, 0)' : 'translate3d(' + currentDelta + 'px, 0, 0)';
+            //dom.style.webkitTransform = (opt.isVertical) ? 'translate3d(0, ' + currentDelta + 'px, 0)' : 'translate3d(' + currentDelta + 'px, 0, 0)';
+            var transform = (opt.isVertical) ? 'translate3d(0, ' + currentDelta + 'px, 0)' : 'translate3d(' + currentDelta + 'px, 0, 0)';
+            $.css(dom, {'transform': transform});
             startPos = movePos;
         });
 
@@ -125,7 +134,12 @@ var ftouch = (function($win, $) {
     var slide = function(num) {
         config.currentNode += num;
         currentDelta = -1 * config.currentNode * config.domHeight;
-        dom.style.webkitTransform = 'translate3d(0, ' + currentDelta + 'px, 0)';
+        //dom.style.webkitTransform = 'translate3d(0, ' + currentDelta + 'px, 0)';
+        $.css(dom,
+            {
+                'transform': 'translate3d(0, ' + currentDelta + 'px, 0)',
+                'transition': '0.3s'
+            });
         touchEndDistance = 0;
     };
 
