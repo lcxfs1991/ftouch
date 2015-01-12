@@ -49,16 +49,18 @@ var ftouch = (function($win, $) {
 
     var config = {
         currentNode: 0,
-        direction: 0,
-        domWidth: opt.wrapper.clientWidth,
-        domHeight: opt.wrapper.clientHeight
+        direction: 0
     }
 
     var touchEndDistance = 0;
     var currentDelta = 0;
 
     var init = function() {
-        swipe();
+        setTimeout(function() {
+            config.domWidth = opt.wrapper.clientWidth;
+            config.domHeight = opt.wrapper.clientHeight;
+            swipe();
+        }, 200);
     };
 
     var swipe = function() {
@@ -68,6 +70,8 @@ var ftouch = (function($win, $) {
 
         var startPos = null;
         var movePos = null;
+        var swipeThreshold =  config.domHeight / 9;
+        var bouncingThreshold = config.domHeight / 5;
 
         $.on(dom, 'touchstart', function(ev) {
             startPos = ev.touches[0];
@@ -80,6 +84,22 @@ var ftouch = (function($win, $) {
             var distance = movePosDelta - startPosDelta;
             checkDirection(distance);
             currentDelta += distance;
+            var baseHeight = 0;
+            if (config.direction === -1) {
+                baseHeight = config.currentNode * config.domHeight + (-1) * config.direction * bouncingThreshold;
+            }
+            else if (config.direction === 1) {
+                baseHeight = -1 * (config.currentNode * config.domHeight + bouncingThreshold);
+            }
+
+
+            if (config.currentNode === 0 && currentDelta >= baseHeight && config.direction === -1) {
+                currentDelta = baseHeight;
+            }
+            else if (config.currentNode === children.length - 1 && currentDelta <=   baseHeight  && config.direction === 1) {
+                currentDelta =  baseHeight;
+            }
+
             touchEndDistance = currentDelta;
             dom.style.webkitTransform = (opt.isVertical) ? 'translate3d(0, ' + currentDelta + 'px, 0)' : 'translate3d(' + currentDelta + 'px, 0, 0)';
             startPos = movePos;
@@ -87,16 +107,7 @@ var ftouch = (function($win, $) {
 
         $.on(dom, 'touchend', function(ev) {
             var touchEndDistanceABS = Math.abs(touchEndDistance);
-            var baseHeight = 0;
-
-            if (config.direction === -1) {
-                baseHeight = config.currentNode * config.domHeight - config.domHeight / 3;
-            }
-            else if (config.direction === 1) {
-                baseHeight = config.domHeight / 3 + config.currentNode * config.domHeight;
-            }
-
-            //console.log(touchEndDistanceABS + '-' + baseHeight);
+            var baseHeight = config.currentNode * config.domHeight + config.direction * swipeThreshold;
 
             if (config.direction === -1 && touchEndDistanceABS <= baseHeight && config.currentNode !== 0) {
                 slide(-1);
@@ -113,7 +124,6 @@ var ftouch = (function($win, $) {
 
     var slide = function(num) {
         config.currentNode += num;
-        console.log(config.currentNode);
         currentDelta = -1 * config.currentNode * config.domHeight;
         dom.style.webkitTransform = 'translate3d(0, ' + currentDelta + 'px, 0)';
         touchEndDistance = 0;
@@ -122,15 +132,10 @@ var ftouch = (function($win, $) {
     var checkDirection = function(distance) {
         // isVertical = true, 1 -> to bottom, -1 -> to top
         config.direction = (distance > 0) ? -1 : 1;
-        //console.log(config.direction);
         if (config.direction === -1) {
             return false;
         }
         return true;
-    };
-
-    var bouncingEffect = function() {
-
     };
 
     var resetSwipe = function() {
