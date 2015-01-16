@@ -15,13 +15,15 @@ var core = (function(){
             }, false);
         };
 
-        core.css = function(object, cssStyle, value) {
+        core.css = function(object, styleList) {
             var cssText = '';
-            if (object) {
-                for (key in vendors) {
-                    cssText += '-' + vendors[key] + '-' + cssStyle + ';' + value + ';';
+            for (cssStyle in styleList) {
+                if (object) {
+                    for (key in vendors) {
+                        cssText += '-' + vendors[key] + '-' + cssStyle + ':' + styleList[cssStyle] + ';';
+                    }
+                    cssText += cssStyle + ':' + styleList[cssStyle] + ':';
                 }
-                cssText += cssStyle + ';' + value + ';';
             }
             object.style.cssText = cssText;
         };
@@ -65,8 +67,7 @@ var ftouch = (function($win, $) {
 
     var swipe = function() {
 
-        $.css(dom, 'transform', 'translate3d(0, 0, 0)');
-        $.css(dom, 'transition', '0s');
+        $.css(dom, {'transform':  'translate3d(0, 0, 0)', 'transition': '0'})
 
         var startPos = null;
         var movePos = null;
@@ -101,18 +102,20 @@ var ftouch = (function($win, $) {
             }
 
             touchEndDistance = currentDelta;
-            dom.style.webkitTransform = (opt.isVertical) ? 'translate3d(0, ' + currentDelta + 'px, 0)' : 'translate3d(' + currentDelta + 'px, 0, 0)';
+            var transform = (opt.isVertical) ? 'translate3d(0, ' + currentDelta + 'px, 0)' : 'translate3d(' + currentDelta + 'px, 0, 0)';
+            $.css(dom, {'transform': transform});
             startPos = movePos;
         });
 
         $.on(dom, 'touchend', function(ev) {
             var touchEndDistanceABS = Math.abs(touchEndDistance);
             var baseHeight = config.currentNode * config.domHeight + config.direction * swipeThreshold;
-
-            if (config.direction === -1 && touchEndDistanceABS <= baseHeight && config.currentNode !== 0) {
+            console.log(config.direction + '-' + touchEndDistanceABS + '-' + baseHeight + '-' + config.currentNode);
+            if (config.currentNode !== 0 && config.direction === -1 && touchEndDistanceABS <= baseHeight) {
                 slide(-1);
              }
-            else if (config.direction === 1 && touchEndDistanceABS >= baseHeight && config.currentNode !== children.length - 1) {
+            else if (config.currentNode !== children.length - 1 && config.direction === 1 && touchEndDistanceABS >= baseHeight) {
+                console.log('!!');
                 slide(1);
             }
             else {
@@ -125,22 +128,30 @@ var ftouch = (function($win, $) {
     var slide = function(num) {
         config.currentNode += num;
         currentDelta = -1 * config.currentNode * config.domHeight;
-        dom.style.webkitTransform = 'translate3d(0, ' + currentDelta + 'px, 0)';
+        $.css(dom,
+            {
+                'transform': 'translate3d(0, ' + currentDelta + 'px, 0)',
+                'transition': '0.3s'
+            });
         touchEndDistance = 0;
     };
 
     var checkDirection = function(distance) {
         // isVertical = true, 1 -> to bottom, -1 -> to top
-        config.direction = (distance > 0) ? -1 : 1;
+        if (distance > 0) {
+            config.direction = -1;
+        }
+        else if (distance < 0) {
+            config.direction = 1;
+        }
+        else {
+            config.direction = 0;
+        }
+
         if (config.direction === -1) {
             return false;
         }
         return true;
-    };
-
-    var resetSwipe = function() {
-        endDistance = 0;
-        currentDelta = 0;
     };
 
     var ftouch = {
