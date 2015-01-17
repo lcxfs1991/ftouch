@@ -61,8 +61,19 @@ var ftouch = (function($win, $) {
         setTimeout(function() {
             config.domWidth = opt.wrapper.clientWidth;
             config.domHeight = opt.wrapper.clientHeight;
+            // initialStyle();
             swipe();
         }, 200);
+    };
+
+    var initialStyle = function() {
+        var offsetStyle = (opt.isVertical) ? 'top' : 'left';
+        var offsetDelta = (opt.isVertical) ? config.domHeight : config.domWidth;
+        for (var i = 0; i < children.length; i++) {
+            children.node[i].style.cssText = 'position:absolute;height: ' + config.domHeight 
+                                             + 'px;width: ' + config.domWidth + 'px;'
+                                             + offsetStyle + ': ' + (offsetDelta * i) + 'px;';
+        }
     };
 
     var swipe = function() {
@@ -79,6 +90,7 @@ var ftouch = (function($win, $) {
         });
 
         $.on(dom, 'touchmove', function(ev) {
+            ev.preventDefault();
             movePos = ev.touches[0];
             var movePosDelta = (opt.isVertical) ? movePos.pageY : movePos.pageX;
             var startPosDelta = (opt.isVertical) ? startPos.pageY : startPos.pageX;
@@ -110,12 +122,12 @@ var ftouch = (function($win, $) {
         $.on(dom, 'touchend', function(ev) {
             var touchEndDistanceABS = Math.abs(touchEndDistance);
             var baseHeight = config.currentNode * config.domHeight + config.direction * swipeThreshold;
-            console.log(config.direction + '-' + touchEndDistanceABS + '-' + baseHeight + '-' + config.currentNode);
+            // console.log(config.direction + '-' + touchEndDistanceABS + '-' + baseHeight + '-' + config.currentNode);
             if (config.currentNode !== 0 && config.direction === -1 && touchEndDistanceABS <= baseHeight) {
                 slide(-1);
              }
             else if (config.currentNode !== children.length - 1 && config.direction === 1 && touchEndDistanceABS >= baseHeight) {
-                console.log('!!');
+                // console.log('!!');
                 slide(1);
             }
             else {

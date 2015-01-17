@@ -57,32 +57,33 @@
         <section class="article"></section>
         <section class="article"></section>
     </div>
-    <script src="ftouch.js"></script>
+     <script src="ftouch.js"></script>
     <script>
-//        var dom = document.getElementById('dom');
-//        var currentY = 0;
-//        dom.style.webkitTransform = 'translate3d(0, 0, 0)';
-//        dom.style.webkitTransition = '0s';
-//        var startPos = null;
-//        var movePos = null;
-//
-//        dom.addEventListener('touchstart', function(ev) {
-//            startPos = ev.touches[0];
-//            console.log(startPos);
-//        }, false);
-//
-//        dom.addEventListener('touchmove', function(ev) {
-//            movePos = ev.touches[0];
-//            var distance = movePos.pageY - startPos.pageY;
-//            currentY += distance;
-//            dom.style.webkitTransform = 'translate3d(0, ' + currentY + 'px, 0)';
-//            startPos = movePos;
-//            console.log(distance);
-//        }, false);
-//
-//        dom.addEventListener('touchend', function(ev) {
-//
-//        }, false);
+       // var dom = document.getElementById('dom');
+       // var currentY = 0;
+       // // dom.style.webkitTransform = 'translate3d(0, 0, 0)';
+       // // dom.style.webkitTransition = '0s';
+       // var startPos = null;
+       // var movePos = null;
+
+       // dom.addEventListener('touchstart', function(ev) {
+       //     startPos = ev.targetTouches[0];
+       //     console.log(startPos);
+       // }, false);
+
+       // dom.addEventListener('touchmove', function(ev) {
+       //     ev.preventDefault();
+       //     movePos = ev.targetTouches[0];
+       //     var distance = movePos.pageY - startPos.pageY;
+       //     currentY += distance;
+       //     dom.style.webkitTransform = 'translateZ(0) translateY(' + currentY + 'px)';
+       //     startPos = movePos;
+       //     // console.log(distance);
+       // }, false);
+
+       // dom.addEventListener('touchend', function(ev) {
+
+       // }, false);
 
         ftouch.init();
 
