@@ -1,9 +1,12 @@
 var swipe = {
     init: function() {
+        var self = this;
         $ = this.$;
         this.config.currentNode = 0;
-        this.initStyle();
-        $.css(this.opt.wrapper, {'transform':  'translate3d(0, 0, 0)', 'transition': '0'});
+        setTimeout(function() {
+            self.initStyle();
+            $.css(this.opt.wrapper, {'transform':  'translate3d(0, 0, 0)', 'transition': '0'});
+        }, 50); 
     },
     initStyle: function() {
         var cf = this.config;
@@ -75,7 +78,7 @@ var swipe = {
         });
         cf.touchEndDistance = 0;
         if (num !== 0 && option.swipe.onswipechange) {
-            option.swipe.onswipechange();
+            option.swipe.onswipechange(cf.currentNode);
         }
     }
 };
