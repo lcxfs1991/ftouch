@@ -2,18 +2,26 @@
  * Created by heyli on 2015/1/9.
  */
 
+/**
+ * basic utilities
+ */
+
 var ftouchUtils = (function(){
 
     var utils = {};
     try {
+
+        // cross browser css prefix
         var vendors = ['ms', 'moz', 'webkit', 'o'];
 
+        // bind events
         utils.on = function(object, event, callback) {
             object.addEventListener(event, function(ev) {
                 (callback)(ev);
             }, false);
         };
 
+        // add css styles
         utils.css = function(object, styleList) {
             var cssText = '';
             for (cssStyle in styleList) {
@@ -34,11 +42,22 @@ var ftouchUtils = (function(){
     return utils;
 }());
 
+/**
+ * core function
+ * @param object window object 
+ * @param object utilities object
+ *
+ */
 var ftouch = (function($win, $) {
 
+    // options
+    // wrapper:      dom       event binding dom
+    // isVertical:   boolean   vertical slide or not
+    // debug         boolean   debug mode or not
     var opt = {
         wrapper: $win.document.body,
-        isVertical: false
+        isVertical: false,
+        debug: true
     };
 
     var config = {
@@ -61,13 +80,9 @@ var ftouch = (function($win, $) {
                 obj.opt = opt;
                 obj.config = config;
                 obj.$ = $;
-                obj.getDirection = getDirection;
                 eventHandler(obj);
-
-                setTimeout(function() {
-                    obj.init();
-                }, 50); 
-            } 
+                obj.init(); 
+            }
         }  
     };
 
