@@ -61,17 +61,18 @@ var ftouch = (function($win, $) {
     };
 
     var config = {
-        direction: 0,
-        touchEndDistance: 0,
-        currentDelta: 0
+        direction: 0,               // direction
+        currentDelta: 0             // current moving delta value
     };
 
+    // initialization option
     var init = function(option) {
         for (key in option) {
             opt[key] = option[key];
         }
     };
 
+    // register plugin
     var register = function(object) {
         var pluginArr = object.split(',');
         for (var i = 0; i < pluginArr.length; i++) {
@@ -86,6 +87,7 @@ var ftouch = (function($win, $) {
         }  
     };
 
+    // get moving direction
     var getDirection = function(distance) {
         // isVertical = true, 1 -> to bottom, -1 -> to top
         if (distance > 0) {
@@ -104,31 +106,43 @@ var ftouch = (function($win, $) {
         return true;
     };
 
+    // event handler function
     var eventHandler = function(obj) {
-
+        // customized variables
         var custVar = {
-            startPos: null,
-            movePos: null,
-            startPosDelta: 0,
-            movePosDelta: 0,
-            distance: 0
+            startPos: null,     // finger start point
+            movePos: null,      // finger moving point (real time)
+            startPosDelta: 0,   // finger starting point delta value    
+            movePosDelta: 0,    // finger moving point delta value
+            distance: 0         // moving distance 
         };
         $.on(opt.wrapper, 'touchstart', function(ev) {
+            // TODO: should copy instead of directly assign
             custVar.startPos = ev.touches[0];
             obj.ontouchstart && obj.ontouchstart(ev, custVar);
             opt.ontouchstart && opt.ontouchstart();
         });
 
         $.on(opt.wrapper, 'touchmove', function(ev) {
+            // TODO: should copy instead of directly assign
             custVar.movePos = ev.touches[0];
+            // assign pageY or pageX value based on verical or horizontal slide
             custVar.movePosDelta = (opt.isVertical) ? custVar.movePos.pageY : custVar.movePos.pageX;
             custVar.startPosDelta = (opt.isVertical) ? custVar.startPos.pageY : custVar.startPos.pageX;
             custVar.distance = custVar.movePosDelta - custVar.startPosDelta;
-            getDirection(custVar.distance);
+
+            // get finger moving diraction
+            getDirection(custVar.distance);   
+
+            // current moving delta value
             config.currentDelta += custVar.distance;
             
+            // callback
             obj.ontouchmove && obj.ontouchmove(ev, custVar);
 
+
+            // reassign finger starting point once calculation is done 
+            // TODO: should copy instead of directly assign
             custVar.startPos = custVar.movePos;
         });
 
