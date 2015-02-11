@@ -7,7 +7,7 @@ var fswipe = {
         setTimeout(function() {
             self.initStyle();
             $.css(this.opt.wrapper, {'transform':  'translate3d(0, 0, 0)', 'transition': '0'});
-            self.opt.swipe.init();
+            self.opt.swipe.init && self.opt.swipe.init();
         }, 50); 
     },
     initStyle: function() {
