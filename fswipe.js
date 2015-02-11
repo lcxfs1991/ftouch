@@ -1,4 +1,4 @@
-var swipe = {
+var fswipe = {
     touchEndDistance: 0, // distance value for touch end
     init: function() {
         var self = this;
@@ -57,7 +57,6 @@ var swipe = {
         }
 
         this.touchEndDistance = cf.currentDelta;
-        console.log(this.touchEndDistance);
         var transform = (this.opt.isVertical) ? 'translate3d(0, ' + cf.currentDelta + 'px, 0)' 
                                               : 'translate3d(' + cf.currentDelta + 'px, 0, 0)';
         $.css(this.opt.wrapper, {'transform': transform});

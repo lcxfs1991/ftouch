@@ -77,7 +77,7 @@ var ftouch = (function($win, $) {
         var pluginArr = object.split(',');
         for (var i = 0; i < pluginArr.length; i++) {
             if (typeof $win[pluginArr[i]] === 'object') {
-                var obj = $win[object];
+                var obj = $win[pluginArr[i]];
                 obj.opt = opt;
                 obj.config = config;
                 obj.$ = $;
