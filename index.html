@@ -54,11 +54,11 @@
         <section class="article"></section>
     </div>
     <script src="ftouch.js"></script>
-    <script src="fswipe.js"></script>
+    <script src="ftouchSwipe.js"></script>
     <script>
         var opt = {
             wrapper: document.getElementById('dom'),
-            isVertical : false,
+            isVertical : true,
             ontouchstart: function() {
                 console.log('start');
             },
@@ -66,17 +66,13 @@
                 console.log('end');
             },
             swipe: {
-                init: function() {
-                    console.log('swipe init');
-                },
-                onswipechange: function(index) {
-                    console.log('it is ' + index);
+                onswipechange: function() {
+                    console.log('change');
                 }
             }
         };
         
-        ftouch.init(opt);
-        ftouch.register('fswipe');
+        new FTouch(opt, 'FTouchSwipe'); 
 
     </script>
 </body>
