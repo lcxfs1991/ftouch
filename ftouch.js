@@ -72,14 +72,10 @@
 
     FTouch.prototype.register = function(plugins) {
 
-        if (is.String(plugins)) {
-            plugins = plugins.split(',');
-        }
-
         // register plugins
         for (var i = 0, len = plugins.length; i < len; i++) {
-            if (is.Function(window[plugins[i]])) {
-                var plugin = window[plugins[i]];
+            if (is.Function(plugins[i])) {
+                var plugin = plugins[i];
                 plugin.prototype.bindEvent = bindEvent,
                 plugin.prototype.renderCss = renderCss;
                 var instance = new plugin(opt, params);
